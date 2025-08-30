@@ -2,11 +2,11 @@ research_task:
   description: >
     Conduct a thorough research about {topic}
     Make sure you find relevant information given.
-    Include current statistics, trends, key developments, challenges, and opportunities.
+    Include current statistics, trends, key developments and challenges.
     The current year is {current_year}.
   expected_output: >
     A collection of all relevant and useful information about {topic}.
-    Include detailed findings, statistics, trends, recent developments, and any useful data.
+    Include such as detailed findings, statistics, trends, recent developments, and any useful data.
     Present the information in a structured format with clear sections and detailed explanations.
   agent: researcher
 
@@ -15,7 +15,9 @@ summarize_task:
     Take the research findings and create a concise summary.
     Focus on the most important points and key insights about {topic}.
   expected_output: >
-    A clear summary with main points organized in 3-4 key categories
+    A clear summary with main points organized in 2-3 key categories as a paragraph.
+    Each paragraph should have a title and a brief description with 1-2 sentences.
+    Make sure to highlight statistics, trends and key findings.
   agent: summarizer
 
 reporting_task:
