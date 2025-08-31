@@ -1,17 +1,32 @@
 research_task:
   description: >
     Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Make sure you find relevant information given.
+    Include current statistics, trends, key developments and challenges.
+    The current year is {current_year}.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
+    A collection of all relevant and useful information about {topic}.
+    Include such as detailed findings, statistics, trends, recent developments, and any useful data.
+    Present the information in a structured format with clear sections and detailed explanations.
   agent: researcher
+
+summarize_task:
+  description: >
+    Take the research findings and create a concise summary.
+    Focus on the most important points and key insights about {topic}.
+  expected_output: >
+    A clear summary with main points organized in 2-3 key categories as a paragraph.
+    Each paragraph should have a title and a brief description with 1-2 sentences.
+    Make sure to highlight statistics, trends and key findings.
+  agent: summarizer
 
 reporting_task:
   description: >
     Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Make sure the report contains any and all relevant information.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
+    A report with the main topics, each with a full section of information.
     Formatted as markdown without '```'
   agent: reporting_analyst
+  markdown: true
+  output_file: report.md

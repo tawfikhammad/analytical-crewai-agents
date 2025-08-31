@@ -1,10 +1,50 @@
-from crewai import Agent, Crew, Process, Task
+from crewai import Agent, Crew, Process, Task, TaskOutput
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
-from typing import List
-# If you want to run a snippet of code before or after the crew starts,
-# you can use the @before_kickoff and @after_kickoff decorators
-# https://docs.crewai.com/concepts/crews#example-crew-class-with-decorators
+from typing import List, Tuple, Any
+from crewai_tools import SerperDevTool
+import json
+
+search_tool = SerperDevTool(n_results=3)
+
+def validate_research_result(result: TaskOutput) -> Tuple[bool, Any]:
+    try:
+        result = result.raw
+        #check word count
+        word_count = len(result.split())
+        if not result or word_count < 400:
+            return (False, "Summary output is short (less than 400 words)")
+        
+        return (True, result.strip())
+
+    except Exception as e:
+        return (False, "Unexpected error during validation")
+
+def validate_summary_result(result: TaskOutput) -> Tuple[bool, Any]:
+    try:
+
+        result = result.raw
+        print("=========================================")
+        print(result)
+        print("=========================================")
+        #Check word count
+        word_count = len(result.split())
+        if not result or word_count < 100:
+            return (False, "Summary output is short (less than 100 words)")
+
+        if word_count > 400:
+            return (False, "Summary output is too long (more than 400 words)")
+        # Check sentence count
+        sentences = [s.strip().lower() for s in result.split('.') if len(s.strip()) > 10]
+        if len(sentences) > 7:
+            return (False, "Summary output should contain at most 7 meaningful sentences.")
+
+        if not sentences or len(sentences) < 1:
+            return (False, "Summary output should contain at least 1 meaningful sentences.")
+
+        return (True, result.strip())
+    except Exception as e:
+        return (False, "Unexpected error during validation")
 
 @CrewBase
 class AnalystCrew():
@@ -13,52 +53,56 @@ class AnalystCrew():
     agents: List[BaseAgent]
     tasks: List[Task]
 
-    # Learn more about YAML configuration files here:
-    # Agents: https://docs.crewai.com/concepts/agents#yaml-configuration-recommended
-    # Tasks: https://docs.crewai.com/concepts/tasks#yaml-configuration-recommended
-    
-    # If you would like to add tools to your agents, you can learn more about it here:
-    # https://docs.crewai.com/concepts/agents#agent-tools
     @agent
     def researcher(self) -> Agent:
         return Agent(
-            config=self.agents_config['researcher'], # type: ignore[index]
+            config=self.agents_config['researcher'],
             verbose=True
         )
+    
+    @agent
+    def summarizer(self) -> Agent:
+        return Agent(
+            config=self.agents_config['summarizer'],
+            verbose=True
+        )
+
 
     @agent
     def reporting_analyst(self) -> Agent:
         return Agent(
-            config=self.agents_config['reporting_analyst'], # type: ignore[index]
+            config=self.agents_config['reporting_analyst'],
             verbose=True
         )
 
-    # To learn more about structured task outputs,
-    # task dependencies, and task callbacks, check out the documentation:
-    # https://docs.crewai.com/concepts/tasks#overview-of-a-task
     @task
     def research_task(self) -> Task:
         return Task(
-            config=self.tasks_config['research_task'], # type: ignore[index]
+            config=self.tasks_config['research_task'],
+            tools=[search_tool],
+            guardrail=validate_research_result
+        )
+
+    @task
+    def summarize_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['summarize_task'],
+            guardrail=validate_summary_result
         )
 
     @task
     def reporting_task(self) -> Task:
         return Task(
-            config=self.tasks_config['reporting_task'], # type: ignore[index]
-            output_file='report.md'
+            config=self.tasks_config['reporting_task'],
         )
 
     @crew
     def crew(self) -> Crew:
         """Creates the AnalystCrew crew"""
-        # To learn how to add knowledge sources to your crew, check out the documentation:
-        # https://docs.crewai.com/concepts/knowledge#what-is-knowledge
 
         return Crew(
             agents=self.agents, # Automatically created by the @agent decorator
             tasks=self.tasks, # Automatically created by the @task decorator
             process=Process.sequential,
             verbose=True,
-            # process=Process.hierarchical, # In case you wanna use that instead https://docs.crewai.com/how-to/Hierarchical/
         )
