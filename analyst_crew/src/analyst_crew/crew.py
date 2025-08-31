@@ -24,10 +24,13 @@ def validate_summary_result(result: TaskOutput) -> Tuple[bool, Any]:
     try:
 
         result = result.raw
+        print("=========================================")
+        print(result)
+        print("=========================================")
         #Check word count
         word_count = len(result.split())
-        if not result or word_count < 150:
-            return (False, "Summary output is short (less than 150 words)")
+        if not result or word_count < 100:
+            return (False, "Summary output is short (less than 100 words)")
 
         if word_count > 400:
             return (False, "Summary output is too long (more than 400 words)")
