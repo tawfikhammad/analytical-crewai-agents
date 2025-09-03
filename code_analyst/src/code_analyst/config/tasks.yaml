@@ -1,0 +1,27 @@
+coder_task:
+  description: >
+    Write efficient and effective Python code to answer the query: {topic}.
+    Ensure the code stores the final answer in a variable called `result`.
+  expected_output: >
+    Python code that is well-structured, optimized, and stores the final answer in `result`.
+  agent: coder
+
+executor_task:
+  description: >
+    Execute the provided python code snippets, ensuring they run correctly and efficiently.
+    Validate the output and catch any errors that may arise during execution.
+  expected_output: >
+    The output of the executed code (answer to {topic}) or error messages if any issues were encountered.
+  agent: executor
+
+reporting_task:
+  description: >
+    Summarize the full process: the query, the generated code, the execution result, 
+    and provide insights or recommendations.
+  expected_output: >
+    A clear report that includes:
+    - The original query ({topic})
+    - The code logic
+    - The execution result
+    - Key insights and recommendations
+  agent: reporting_analyst
