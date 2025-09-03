@@ -1,6 +1,6 @@
-# CodeAnalyst Crew
+# Code Analyst Crew
 
-Welcome to the CodeAnalyst Crew project, powered by [crewAI](https://crewai.com). This template is designed to help you set up a multi-agent AI system with ease, leveraging the powerful and flexible framework provided by crewAI. Our goal is to enable your agents to collaborate effectively on complex tasks, maximizing their collective intelligence and capabilities.
+Welcome to the Code Analyst Crew project, powered by [crewAI](https://crewai.com). This project is designed to analyze data through automated code generation and execution using a multi-agent AI system. The crew consists of specialized agents that work together to write Python code, execute it safely, and generate comprehensive reports based on data analysis queries.
 
 ## Installation
 
@@ -35,20 +35,77 @@ To kickstart your crew of AI agents and begin task execution, run this from the 
 $ crewai run
 ```
 
-This command initializes the code_analyst Crew, assembling the agents and assigning them tasks as defined in your configuration.
+This command initializes the Code Analyst Crew, assembling the agents and assigning them tasks as defined in your configuration.
 
-This example, unmodified, will run the create a `report.md` file with the output of a research on LLMs in the root folder.
+This example, unmodified, will analyze the "Bank Customer Churn Prediction.csv" dataset to answer "What is the churn rate in France country?" and create both a Python script (`script.py`) and a comprehensive report (`report.md`) in the `assets/outputs_files/` directory.
 
 ## Understanding Your Crew
 
-The code_analyst Crew is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+The Code Analyst Crew is composed of three specialized AI agents, each with unique roles and capabilities:
 
-## Support
+### 🧑‍💻 Coder Agent
+- **Role**: Python Coder specialized in data analysis
+- **Goal**: Write and optimize Python code to answer data queries
+- **Tools**: FileReadTool and DirectoryReadTool for accessing input files
+- **Safety**: Ensures code is safe without dangerous operations (file deletion, subprocess calls, OS commands)
+- **Output**: Well-structured Python code saved to `assets/outputs_files/script.py`
 
-For support, questions, or feedback regarding the CodeAnalyst Crew or crewAI.
-- Visit our [documentation](https://docs.crewai.com)
-- Reach out to us through our [GitHub repository](https://github.com/joaomdmoura/crewai)
-- [Join our Discord](https://discord.com/invite/X4JWnZnxPb)
-- [Chat with our docs](https://chatg.pt/DWjSBZn)
+### ⚡ Executor Agent  
+- **Role**: Code Executor
+- **Goal**: Execute and validate Python code snippets safely
+- **Capabilities**: Allow code execution with built-in error handling
+- **Tools**: File access tools for reading input data
+- **Validation**: Catches errors and ensures code runs correctly, expects results in a `result` variable
 
-Let's create wonders together with the power and simplicity of crewAI.
+### 📊 Reporting Analyst Agent
+- **Role**: Reporting Analyst  
+- **Goal**: Create detailed reports based on query results and code analysis
+- **Input**: Uses code execution results and analysis findings
+- **Output**: Comprehensive report saved to `assets/outputs_files/report.md`
+
+The crew follows a sequential process: **Code Generation → Code Execution → Report Generation**, ensuring reliable data analysis with comprehensive documentation.
+
+## Project Structure
+
+```
+code_analyst/
+├── src/code_analyst/
+│   ├── assets/
+│   │   ├── inputs_files/          # Place your CSV/data files here
+│   │   │   └── Bank Customer Churn Prediction.csv
+│   │   └── outputs_files/         # Generated scripts and reports
+│   │       ├── script.py          # Generated Python code
+│   │       └── report.md          # Analysis report
+│   ├── config/
+│   │   ├── agents.yaml           # Agent configurations
+│   │   └── tasks.yaml            # Task definitions
+│   ├── crew.py                   # Main crew logic
+│   └── main.py                   # Entry point and configurations
+```
+
+## Configuration
+
+### Environment Variables
+Create a `.env` file in the project root with:
+```
+OPENAI_API_KEY=your_openai_api_key_here
+```
+
+### Customizing Analysis Queries
+Edit the `inputs` dictionary in `src/code_analyst/main.py` to change the analysis query:
+```python
+inputs = {
+    'topic': 'Your data analysis question here',
+}
+```
+
+### Adding Data Files
+1. Place your CSV or data files in `src/code_analyst/assets/inputs_files/`
+2. The agents will automatically access files from this directory
+3. Update your query in `main.py` to reference your specific data and analysis needs
+
+## Example Queries
+- "What is the average age of customers by region?"
+- "Calculate the correlation between income and purchase amount"
+- "Find the top 10 products by sales volume"
+- "What is the churn rate in France country?" (default example)
