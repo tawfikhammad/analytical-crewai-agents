@@ -1,7 +1,7 @@
 [project]
-name = "Web searcher"
+name = "web_searcher"
 version = "0.1.0"
-description = "analyst_crew using crewAI"
+description = "web_searcher using crewAI"
 authors = [{ name = "Your Name", email = "you@example.com" }]
 requires-python = ">=3.10,<3.14"
 dependencies = [
@@ -9,11 +9,11 @@ dependencies = [
 ]
 
 [project.scripts]
-analyst_crew = "analyst_crew.main:run"
-run_crew = "analyst_crew.main:run"
-train = "analyst_crew.main:train"
-replay = "analyst_crew.main:replay"
-test = "analyst_crew.main:test"
+web_searcher = "web_searcher.main:run"
+run_crew = "web_searcher.main:run"
+train = "web_searcher.main:train"
+replay = "web_searcher.main:replay"
+test = "web_searcher.main:test"
 
 [build-system]
 requires = ["hatchling"]

@@ -47,8 +47,8 @@ def validate_summary_result(result: TaskOutput) -> Tuple[bool, Any]:
         return (False, "Unexpected error during validation")
 
 @CrewBase
-class AnalystCrew():
-    """AnalystCrew crew"""
+class WebSearcher():
+    """WebSearcher crew"""
 
     agents: List[BaseAgent]
     tasks: List[Task]
