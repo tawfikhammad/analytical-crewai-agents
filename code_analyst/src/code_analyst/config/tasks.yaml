@@ -1,17 +1,27 @@
-research_task:
+coder_task:
   description: >
-    Conduct a thorough research about {topic}
-    Make sure you find any interesting and relevant information given
-    the current year is {current_year}.
+    Write efficient and effective Python code to answer the query: {topic}.
+    Ensure the code stores the final answer in a variable called `result`.
   expected_output: >
-    A list with 10 bullet points of the most relevant information about {topic}
-  agent: researcher
+    Python code that is well-structured, optimized, and stores the final answer in `result`.
+  agent: coder
+
+executor_task:
+  description: >
+    Execute the provided python code snippets, ensuring they run correctly and efficiently.
+    Validate the output and catch any errors that may arise during execution.
+  expected_output: >
+    The output of the executed code (answer to {topic}) or error messages if any issues were encountered.
+  agent: executor
 
 reporting_task:
   description: >
-    Review the context you got and expand each topic into a full section for a report.
-    Make sure the report is detailed and contains any and all relevant information.
+    Summarize the full process: the query, the generated code, the execution result, 
+    and provide insights or recommendations.
   expected_output: >
-    A fully fledged report with the main topics, each with a full section of information.
-    Formatted as markdown without '```'
+    A clear report that includes:
+    - The original query ({topic})
+    - The code logic
+    - The execution result
+    - Key insights and recommendations
   agent: reporting_analyst
