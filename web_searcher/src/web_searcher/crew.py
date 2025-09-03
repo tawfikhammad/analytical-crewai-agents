@@ -86,18 +86,23 @@ class WebSearcher():
     def summarize_task(self) -> Task:
         return Task(
             config=self.tasks_config['summarize_task'],
-            guardrail=validate_summary_result
+            guardrail=validate_summary_result,
+            output_key="summary_result",
+            output_file="summary.txt"
         )
 
     @task
     def reporting_task(self) -> Task:
         return Task(
             config=self.tasks_config['reporting_task'],
+            context=[self.summarize_task()],
+            markdown=True,
+            output_file="report.md"
         )
 
     @crew
     def crew(self) -> Crew:
-        """Creates the AnalystCrew crew"""
+        """Creates the WebSearcher crew"""
 
         return Crew(
             agents=self.agents,
