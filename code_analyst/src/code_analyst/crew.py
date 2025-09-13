@@ -46,26 +46,15 @@ class CodeAnalyst():
     def coder_task(self) -> Task:
         return Task(
             config=self.tasks_config['coder_task'],
-            output_key='generated_code',
             output_file='./src/code_analyst/assets/outputs_files/script.py'
         )
 
     @task
     def executor_task(self) -> Task:
-        def executor_handler(context):
-            code = context.get("generated_code", "")
-            if not code:
-                return "No code was provided."
-            try:
-                exec_globals = {}
-                exec(code, exec_globals)
-                return exec_globals.get("result", "Code executed but no `result` variable found.")
-            except Exception as e:
-                return f"Execution error: {str(e)}"
-
         return Task(
             config=self.tasks_config['executor_task'],
-            handler=executor_handler,
+            output_key='execution_result',
+            context=[self.coder_task()],
         )
 
     @task
